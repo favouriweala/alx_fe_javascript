@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  // Initial quotes
+  // Quotes array
   const quotes = [
     { text: "Consistency is the key to success", category: "Motivation" },
     { text: "Love conquers all", category: "Love" },
@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const newQuoteText = document.getElementById("newQuoteText");
   const newQuoteCategory = document.getElementById("newQuoteCategory");
 
-  // Function to show a random quote
-  function showRandomQuote() {
+  // Function to display a random quote
+  function displayRandomQuote() {
     if (quotes.length === 0) {
       displayedQuote.innerHTML = "<p>No quote available</p>";
       return;
@@ -27,9 +27,6 @@ document.addEventListener("DOMContentLoaded", function() {
     <small>- ${randomQuote.category}</small>`;
   }
 
-  // Event listener for "Show New Quote" button
-  quoteButton.addEventListener("click", showRandomQuote);
-
   // Function to add a new quote
   window.addQuote = function() {
     const text = newQuoteText.value.trim();
@@ -37,15 +34,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (text && category) {
       const newQuote = { text, category };
-      quotes.push(newQuote); 
+      quotes.push(newQuote); // add to array
       newQuoteText.value = "";
       newQuoteCategory.value = "";
-
+      
+      displayRandomQuote();
       alert("Quote added successfully!");
-      showRandomQuote(); 
-    } else {
+    } 
+    else {
       alert("Please fill in both fields");
     }
   };
+
+  // Event listener for “Show New Quote” button
+  quoteButton.addEventListener("click", displayRandomQuote);
 
 });
