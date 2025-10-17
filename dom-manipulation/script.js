@@ -1,42 +1,61 @@
-//  Quotes array
+// Quotes array (global)
 const quotes = [
   { text: "Consistency is the key to success", category: "Motivation" },
   { text: "Love conquers all", category: "Love" },
   { text: "Time waits for no man", category: "Wisdom" }
 ];
 
-// DOM elements 
+// DOM elements
 const displayedQuote = document.getElementById("quoteDisplay");
 const quoteButton = document.getElementById("newQuote");
 const newQuoteText = document.getElementById("newQuoteText");
 const newQuoteCategory = document.getElementById("newQuoteCategory");
 
-//  Function to display a random quote 
+// Show a random quote using createElement and appendChild
 function showRandomQuote() {
+  displayedQuote.innerHTML = "";
+
   if (quotes.length === 0) {
-    displayedQuote.innerHTML = "<p>No quote available</p>";
+    const noQuote = document.createElement("p");
+    noQuote.textContent = "No quote available";
+    displayedQuote.appendChild(noQuote);
     return;
   }
 
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const randomQuote = quotes[randomIndex];
 
-  displayedQuote.innerHTML = `<p>"${randomQuote.text}"</p>
-  <small>- ${randomQuote.category}</small>`;
+  const quoteText = document.createElement("p");
+  quoteText.textContent = `"${randomQuote.text}"`;
+
+  const quoteCategory = document.createElement("small");
+  quoteCategory.textContent = `- ${randomQuote.category}`;
+
+  displayedQuote.appendChild(quoteText);
+  displayedQuote.appendChild(quoteCategory);
 }
 
-// Function to add a new quote 
+// Add a new quote dynamically
 function createAddQuoteForm() {
   const text = newQuoteText.value.trim();
   const category = newQuoteCategory.value.trim();
 
   if (text && category) {
     const newQuote = { text, category };
-    quotes.push(newQuote); 
+    quotes.push(newQuote);
 
-    // Display the last added quote
-    displayedQuote.innerHTML = `<p>"${newQuote.text}"</p>
-    <small>- ${newQuote.category}</small>`;
+    // Clear previous display
+    displayedQuote.innerHTML = "";
+
+    // Display last added quote using createElement and appendChild
+    const quoteText = document.createElement("p");
+    quoteText.textContent = `"${newQuote.text}"`;
+
+    const quoteCategory = document.createElement("small");
+    quoteCategory.textContent = `- ${newQuote.category}`;
+
+    displayedQuote.appendChild(quoteText);
+    displayedQuote.appendChild(quoteCategory);
 
     // Clear inputs
     newQuoteText.value = "";
