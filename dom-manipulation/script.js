@@ -1,17 +1,17 @@
-// Quotes array
+//  Quotes array
 const quotes = [
   { text: "Consistency is the key to success", category: "Motivation" },
   { text: "Love conquers all", category: "Love" },
   { text: "Time waits for no man", category: "Wisdom" }
 ];
 
-// DOM elements
+// DOM elements 
 const displayedQuote = document.getElementById("quoteDisplay");
 const quoteButton = document.getElementById("newQuote");
 const newQuoteText = document.getElementById("newQuoteText");
 const newQuoteCategory = document.getElementById("newQuoteCategory");
 
-// Function to display a random quote (global)
+//  Function to display a random quote 
 function showRandomQuote() {
   if (quotes.length === 0) {
     displayedQuote.innerHTML = "<p>No quote available</p>";
@@ -25,8 +25,8 @@ function showRandomQuote() {
   <small>- ${randomQuote.category}</small>`;
 }
 
-// Function to add a new quote (global)
-function addQuote() {
+// Function to add a new quote 
+function createAddQuoteForm() {
   const text = newQuoteText.value.trim();
   const category = newQuoteCategory.value.trim();
 
@@ -34,7 +34,7 @@ function addQuote() {
     const newQuote = { text, category };
     quotes.push(newQuote); 
 
-    // Display the last added quote immediately
+    // Display the last added quote
     displayedQuote.innerHTML = `<p>"${newQuote.text}"</p>
     <small>- ${newQuote.category}</small>`;
 
