@@ -316,6 +316,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function resolveConflicts(localQuotes, serverQuotes) {
     const merged = [...localQuotes];
+    let conflictResolved = false;
 
     serverQuotes.forEach(serverQuote => {
       const existingIndex = merged.findIndex(
@@ -323,15 +324,21 @@ document.addEventListener("DOMContentLoaded", function() {
       );
 
       if (existingIndex !== -1) {
-        // Conflict → server takes precedence
+        // Conflict detected — server takes precedence
         merged[existingIndex] = serverQuote;
+        conflictResolved = true;
       } else {
         merged.push(serverQuote);
       }
     });
 
+    if (conflictResolved) {
+      showNotification("Conflict resolved: Server data applied.");
+    }
+
     return merged;
   }
+
 
   function showNotification(message) {
     const notification = document.createElement("div");
