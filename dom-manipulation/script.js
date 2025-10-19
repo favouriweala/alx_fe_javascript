@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Load quote from local storage or use default ones
-    const quotes = JSON.parse(localStorage.getItem("quotes")) || [
+    let quotes = JSON.parse(localStorage.getItem("quotes")) || [
     { text: "Consistency is the key to success", category: "Motivation" },
     { text: "Love conquers all", category: "Love" },
     { text: "Time waits for no man", category: "Wisdom" }
@@ -236,6 +236,127 @@ document.addEventListener("DOMContentLoaded", function() {
       alert("Please fill in both fields");
     }
   }
+
+    const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+    async function fetchQuotesFromServer() {
+    try {
+      const response = await fetch(SERVER_URL);
+      const data = await response.json();
+
+      // Simulate quotes from server by mapping post titles
+      const serverQuotes = data.slice(0, 5).map(post => ({
+        text: post.title,
+        category: "Server Sync"
+      }));
+
+      console.log("Fetched quotes from server:", serverQuotes);
+
+      // Merge server quotes with local quotes (simulate sync)
+      quotes.push(...serverQuotes);
+      localStorage.setItem("quotes", JSON.stringify(quotes));
+      populateCategories();
+    } catch (error) {
+      console.error("Error fetching quotes:", error);
+    }
+  }
+
+  async function syncQuotesToServer() {
+    try {
+      const unsyncedQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+
+      for (const quote of unsyncedQuotes) {
+        await fetch(SERVER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(quote)
+        });
+      }
+
+      console.log("All local quotes synced to server!");
+    } catch (error) {
+      console.error("Error syncing quotes:", error);
+    }
+  }
+
+  setInterval(() => {
+    console.log("Syncing with server...");
+    fetchQuotesFromServer();
+    syncQuotesToServer();
+  }, 30000); // every 30 seconds
+
+  async function syncWithServer() {
+    try {
+      const response = await fetch(SERVER_URL);
+      const data = await response.json();
+
+      // Simulate server quotes
+      const serverQuotes = data.slice(0, 5).map(post => ({
+        text: post.title,
+        category: "Server Sync"
+      }));
+
+      const localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+
+      // Resolve conflicts: server takes precedence
+      const mergedQuotes = resolveConflicts(localQuotes, serverQuotes);
+
+      // Update local storage
+      localStorage.setItem("quotes", JSON.stringify(mergedQuotes));
+
+      // Notify user of update
+      showNotification("Quotes synced with server successfully!");
+
+      populateCategories();
+    } 
+    catch (error) {
+      console.error("Error syncing with server:", error);
+    }
+  }
+
+  function resolveConflicts(localQuotes, serverQuotes) {
+    const merged = [...localQuotes];
+
+    serverQuotes.forEach(serverQuote => {
+      const existingIndex = merged.findIndex(
+        localQuote => localQuote.text === serverQuote.text
+      );
+
+      if (existingIndex !== -1) {
+        // Conflict → server takes precedence
+        merged[existingIndex] = serverQuote;
+      } else {
+        merged.push(serverQuote);
+      }
+    });
+
+    return merged;
+  }
+
+  function showNotification(message) {
+    const notification = document.createElement("div");
+    notification.textContent = message;
+    notification.style.position = "fixed";
+    notification.style.bottom = "20px";
+    notification.style.right = "20px";
+    notification.style.background = "#222";
+    notification.style.color = "#fff";
+    notification.style.padding = "10px 20px";
+    notification.style.borderRadius = "8px";
+    notification.style.zIndex = "1000";
+    notification.style.opacity = "0.9";
+    document.body.appendChild(notification);
+
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+
+
+
+
+
 
 
 
