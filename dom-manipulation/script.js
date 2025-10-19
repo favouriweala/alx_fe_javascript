@@ -304,7 +304,8 @@ document.addEventListener("DOMContentLoaded", function() {
       localStorage.setItem("quotes", JSON.stringify(mergedQuotes));
 
       // Notify user of update
-      showNotification("Quotes synced with server successfully!");
+      showNotification("Quotes synced with server!");
+
 
       populateCategories();
     } 
